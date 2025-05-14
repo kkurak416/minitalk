@@ -22,12 +22,10 @@ void send_char(int pid, char c)
 		if ((c & (1 << i)) > 0)
 		{
 			kill(pid, SIGUSR2);
-			pause();
 		}
 		else
 		{
 			kill(pid, SIGUSR1);
-			pause();
 		}
 		usleep(100);
 		i--;

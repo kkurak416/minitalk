@@ -12,6 +12,28 @@
 
 #include "minitalk.h"
 
+void send_char(int pid, char c)
+{
+	int	i;
+	
+	i = 7;
+	while (i >= 0)
+	{
+		if ((c & (1 << i)) > 0)
+		{
+			kill(pid, SIGUSR2);
+			pause();
+		}
+		else
+		{
+			kill(pid, SIGUSR1);
+			pause();
+		}
+		usleep(100);
+		i--;
+	}
+}
+
 int parse_pid(char *arg)
 {
 	int	i;
@@ -34,6 +56,20 @@ int parse_pid(char *arg)
 
 int main (int argc, char **argv)
 {
+	int	pid;
+	int	i;
+	
+	i = 0;
 	if (argc != 3 || argv[2][0] =='\0')
 		return(0);
+	pid = parse_pid(argv[1]);
+	if (pid == -1)
+		return(0);
+	while (argv[2][i] != '\0')
+	{
+		send_char(pid, argv[2][i]);
+		i++;
+	}
+	send_char(pid, '\0');
+	return (0);
 }

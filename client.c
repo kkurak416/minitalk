@@ -12,10 +12,16 @@
 
 #include "minitalk.h"
 
-void send_char(int pid, char c)
+void	ack_handler(int sig)
+{
+	(void)sig;
+	write(1, "Message recived\n", 16);
+}
+
+void	send_char(int pid, char c)
 {
 	int	i;
-	
+
 	i = 7;
 	while (i >= 0)
 	{
@@ -27,16 +33,16 @@ void send_char(int pid, char c)
 		{
 			kill(pid, SIGUSR1);
 		}
-		usleep(100);
+		usleep(700);
 		i--;
 	}
 }
 
-int parse_pid(char *arg)
+int	parse_pid(char *arg)
 {
 	int	i;
 	int	pid;
-	
+
 	i = 0;
 	while (arg[i])
 	{
@@ -49,20 +55,20 @@ int parse_pid(char *arg)
 	if (pid <= 0)
 		return (-1);
 	return (pid);
-	
 }
 
-int main (int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	int	pid;
 	int	i;
-	
+
 	i = 0;
-	if (argc != 3 || argv[2][0] =='\0')
-		return(0);
+	if (argc != 3 || argv[2][0] == '\0')
+		return (0);
+	signal(SIGUSR1, ack_handler);
 	pid = parse_pid(argv[1]);
 	if (pid == -1)
-		return(0);
+		return (0);
 	while (argv[2][i] != '\0')
 	{
 		send_char(pid, argv[2][i]);

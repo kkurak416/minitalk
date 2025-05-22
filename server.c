@@ -15,10 +15,9 @@
 void	handle_signal(int sig, siginfo_t *info, void *context)
 {
 	static int				bit_index;
-	static unsigned char	c = 0;
+	static unsigned char	c;
 
 	(void)context;
-	bit_index = 0;
 	if (sig == SIGUSR2)
 		c |= (1 << (7 - bit_index));
 	bit_index++;

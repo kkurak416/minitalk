@@ -25,8 +25,10 @@ void	handle_signal(int sig, siginfo_t *info, void *context)
 	{
 		write(1, &c, 1);
 		if (c == '\0')
+		{
 			write(1, "\n", 1);
-		kill(info->si_pid, SIGUSR1);
+			kill(info->si_pid, SIGUSR1);
+		}
 		c = 0;
 		bit_index = 0;
 	}
